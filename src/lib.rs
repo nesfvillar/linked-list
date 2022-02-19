@@ -26,7 +26,7 @@ impl<T> List<T> {
     }
 
     pub fn tail(&self) -> Option<Self> {
-        self.head.clone().map(|node| Self {
+        self.head.as_ref().map(|node| Self {
             head: node.next.clone(),
         })
     }
@@ -42,7 +42,7 @@ impl<T: Clone> Iterator for List<T> {
     type Item = T;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let result = self.head.clone().map(|node| node.value.clone());
+        let result = self.head.as_ref().map(|node| node.value.clone());
         *self = self.tail().unwrap_or_default();
         result
     }
