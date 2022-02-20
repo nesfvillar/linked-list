@@ -25,7 +25,7 @@ impl<T> List<T> {
         }
     }
 
-    pub fn tail(&self) -> Option<Self> {
+    pub fn rest(&self) -> Option<Self> {
         self.head.as_ref().map(|node| Self {
             head: node.next.clone(),
         })
@@ -43,7 +43,7 @@ impl<T: Clone> Iterator for List<T> {
 
     fn next(&mut self) -> Option<Self::Item> {
         let result = self.head.as_ref().map(|node| node.value.clone());
-        *self = self.tail().unwrap_or_default();
+        *self = self.rest().unwrap_or_default();
         result
     }
 }
@@ -79,13 +79,13 @@ mod tests {
     }
 
     #[test]
-    fn test_tail() {
+    fn test_rest() {
         let list: List<u32> = List::new();
         let new_list = list.prepend(1);
         let new_new_list = new_list.prepend(0);
-        assert_eq!(list.tail(), None);
-        assert_eq!(new_list.tail(), Some(list));
-        assert_eq!(new_new_list.tail(), Some(new_list));
+        assert_eq!(list.rest(), None);
+        assert_eq!(new_list.rest(), Some(list));
+        assert_eq!(new_new_list.rest(), Some(new_list));
     }
 
     #[test]
