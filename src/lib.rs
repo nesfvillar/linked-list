@@ -25,6 +25,12 @@ impl<T> List<T> {
         }
     }
 
+    pub fn first(&self) -> Option<T> 
+    where T: Clone
+    {
+        self.head.as_ref().map(|node| node.value.clone())
+    }
+
     pub fn rest(&self) -> Option<Self> {
         self.head.as_ref().map(|node| Self {
             head: node.next.clone(),
@@ -42,7 +48,7 @@ impl<T: Clone> Iterator for List<T> {
     type Item = T;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let result = self.head.as_ref().map(|node| node.value.clone());
+        let result = self.first();
         *self = self.rest().unwrap_or_default();
         result
     }
@@ -76,6 +82,16 @@ mod tests {
         let new_new_list = new_list.prepend(1);
         assert_eq!(new_list.head.as_ref().unwrap().value, 0);
         assert_eq!(new_new_list.head.as_ref().unwrap().value, 1);
+    }
+
+    #[test]
+    fn test_first() {
+        let list: List<u32> = List::new();
+        let new_list = list.prepend(0);
+        let new_new_list = new_list.prepend(1);
+        assert_eq!(list.first(), None);
+        assert_eq!(new_list.first(), Some(0));
+        assert_eq!(new_new_list.first(), Some(1));
     }
 
     #[test]
